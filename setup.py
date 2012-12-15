@@ -2,7 +2,7 @@
 # vim: sw=4 ts=4 fenc=utf-8 et
 
 from setuptools import setup
-import flaskext.sass as package
+import flask_sass as package
 
 setup(name=package.__package_name__,
       version=package.__version__,
@@ -15,8 +15,7 @@ setup(name=package.__package_name__,
       license=package.__license__,
       platforms="OS Independent - Anywhere Python and Ruby's Sass is known to run.",
       keywords = "Flask SASS",
-      namespace_packages = ["flaskext"],
-      packages = ["flaskext"],
+      py_modules = ["flask_sass"],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Environment :: Web Environment',
