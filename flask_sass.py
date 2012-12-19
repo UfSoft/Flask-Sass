@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    flaskext.sass
-    ~~~~~~~~~~~~~
+    flask.ext.sass
+    ~~~~~~~~~~~~~~
 
     A small Flask extension that makes it easy to use Sass_ with your Flask
     application.
@@ -112,8 +112,8 @@ class Sass(object):
         sass_mtime = os.path.getmtime(sass_file)
         if sass_mtime >= css_mtime:
             log.info("Generating %s from %s",
-                     os.path.basename(sass_file),
-                     os.path.basename(css_file))
+                     os.path.basename(css_file),
+                     os.path.basename(sass_file))
             args = self.process_args + [sass_file, css_file]
             log.debug("Subprocess call \"%s\"", ' '.join(args))
             try:
@@ -126,4 +126,3 @@ class Sass(object):
                 log.exception(err)
                 if os.path.isfile(css_file):
                     os.remove(css_file)
-
