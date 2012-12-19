@@ -26,7 +26,7 @@ import logging
 import warnings
 import subprocess
 from flask import Blueprint
-log = logging.getLogger(__name__)
+log = logging.getLogger('flask.ext.sass')
 
 class Sass(object):
     def __init__(self, app):
@@ -38,8 +38,10 @@ class Sass(object):
         self.app = app
         self.app.sass = self
         self.continuous_processing = app.debug or app.testing
-        self.sass_bin_path = app.config.get(
-            'SASS_BIN_PATH', '/var/lib/gems/1.8/bin/sass'
+        self.sass_bin_path = os.path.expanduser(
+            app.config.get(
+                'SASS_BIN_PATH', '/var/lib/gems/1.8/bin/sass'
+            )
         )
         self.process_args = [self.sass_bin_path]
         if self.continuous_processing:
