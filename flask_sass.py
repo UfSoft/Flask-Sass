@@ -10,7 +10,7 @@
     :license: BSD, see LICENSE for more details.
 """
 
-__version__         = '0.8'
+__version__         = '0.9'
 __package_name__    = 'Flask-Sass'
 __summary__         = "A small Flask extension that makes it easy to use " + \
                       "Sass with your Flask application."
@@ -26,7 +26,10 @@ import logging
 import warnings
 import subprocess
 from flask import Blueprint
+
+
 log = logging.getLogger('flask.ext.sass')
+
 
 class Sass(object):
     def __init__(self, app):
