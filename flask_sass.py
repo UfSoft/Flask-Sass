@@ -48,11 +48,12 @@ class Sass(object):
         )
         if not os.access(self.sass_bin_path, os.X_OK):
             log.warning(
-                'The {0!r} is not executable!'.format(self.sass_bin_path)
+                'The {0!r} binary is not executable!'.format(self.sass_bin_path)
             )
             self.process_args = []
-        else:
-            self.process_args = [self.sass_bin_path]
+            return
+
+        self.process_args = [self.sass_bin_path]
 
         if self.continuous_processing:
             self.process_args.append("--style=expanded")
