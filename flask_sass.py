@@ -46,7 +46,14 @@ class Sass(object):
                 'SASS_BIN_PATH', '/var/lib/gems/1.8/bin/sass'
             )
         )
-        self.process_args = [self.sass_bin_path]
+        if not os.access(self.sass_bin_path, os.X_OK):
+            log.warning(
+                'The {0!r} is not executable!'.format(self.sass_bin_path)
+            )
+            self.process_args = []
+        else:
+            self.process_args = [self.sass_bin_path]
+
         if self.continuous_processing:
             self.process_args.append("--style=expanded")
             self.app.before_request(self.find_searcheable_paths)
@@ -63,7 +70,7 @@ class Sass(object):
             self.generate_css_from_sass(fcss, fsass)
 
         with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=DeprecationWarning)
+            #warnings.filterwarnings("ignore", category=DeprecationWarning)
             if self.app.enable_modules:
 
                 for module in self.app.modules.values():
@@ -107,6 +114,13 @@ class Sass(object):
                     )
 
     def generate_css_from_sass(self, css_file, sass_file):
+        if not self.process_args:
+            log.info(
+                'Not generating files since {0!r} is not executable'.format(
+                    self.sass_bin_path
+                )
+            )
+            return
         if not os.path.isfile(css_file):
             css_mtime = -1
         else:
