@@ -41,17 +41,39 @@ class Sass(object):
         self.app = app
         self.app.sass = self
         self.continuous_processing = app.debug or app.testing
-        self.sass_bin_path = os.path.expanduser(
-            app.config.get(
-                'SASS_BIN_PATH', '/var/lib/gems/1.8/bin/sass'
-            )
-        )
-        if not os.access(self.sass_bin_path, os.X_OK):
-            log.warning(
-                'The {0!r} binary is not executable!'.format(self.sass_bin_path)
-            )
-            self.process_args = []
-            return
+        sass_bin_path = app.config.get('SASS_BIN_PATH', None)
+
+        if sass_bin_path:
+            sass_bin_path = os.path.expanduser(sass_bin_path)
+
+        if not sass_bin_path or (sass_bin_path and not
+                                 os.access(sass_bin_path, os.X_OK)):
+            for common_path in ('/usr/bin/sass', '/usr/local/bin/sass',
+                                '/var/lib/gems/1.8/bin/sass'):
+                if os.access(common_path, os.X_OK):
+                    if sass_bin_path:
+                        log.warning(
+                            'The {0!r} binary is not executable! Using {1!r} '
+                            'instead.'.format(sass_bin_path, common_path)
+                        )
+                    else:
+                        log.info(
+                            'Flask-SASS is using {0!r} to compile.'.format(
+                                common_path
+                            )
+                        )
+                    self.sass_bin_path = common_path
+                    break
+            else:
+                log.warning(
+                    'The {0!r} binary is not executable!'.format(
+                        self.sass_bin_path
+                    )
+                )
+                self.process_args = []
+                return
+        else:
+            self.sass_bin_path = sass_bin_path
 
         self.process_args = [self.sass_bin_path]
 
